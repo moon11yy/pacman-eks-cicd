@@ -1,58 +1,97 @@
-# pacman
-Pac-Man
+# Pac-Man EKS CI/CD Project
 
-## Install dependencies
+## Overview
 
-```
-npm install
-```
+This project deploys a Pac-Man Node.js application on Amazon EKS using Kubernetes, MongoDB, Amazon ECR, EBS Persistent Volumes, Network Load Balancer, and GitHub Actions CI/CD.
 
-## Getting started
+## Architecture
 
-```
-npm run start
-```
+- Pac-Man application runs as a Kubernetes Deployment.
+- MongoDB runs as a Kubernetes StatefulSet.
+- MongoDB data is stored on an Amazon EBS Persistent Volume.
+- The application is exposed using an AWS Network Load Balancer.
+- Docker images are stored in Amazon ECR.
+- GitHub Actions automatically builds, pushes, and deploys the application to EKS.
 
-## Development
+## Technologies
 
-```
-npm run dev
-```
+- AWS EKS
+- EKS Auto Mode
+- Docker
+- Kubernetes
+- MongoDB
+- Amazon ECR
+- Amazon EBS
+- Network Load Balancer
+- GitHub Actions
+- eksctl
+- kubectl
 
-## Create Application Container Image
+## Project Structure
 
-### Docker Container Image
+```text
+.
+├── Dockerfile
+├── infra/
+│   └── cluster.yaml
+├── k8s/
+│   ├── storageclass.yaml
+│   ├── mongo-service.yaml
+│   ├── mongo-statefulset.yaml
+│   ├── pacman-deployment.yaml
+│   └── pacman-service.yaml
+├── .github/
+│   └── workflows/
+│       └── deploy.yml
+├── screenshots/
+└── README.md
+Deployment Flow
+Developer pushes code to GitHub
+        ↓
+GitHub Actions starts
+        ↓
+Docker image is built
+        ↓
+Image is pushed to Amazon ECR
+        ↓
+GitHub Actions updates EKS deployment
+        ↓
+Pac-Man runs on EKS
+Kubernetes Resources
+MongoDB
 
-The [Dockerfile](docker/Dockerfile) performs the following steps:
+MongoDB is deployed using a StatefulSet with a Persistent Volume Claim.
 
-1. It is based on Node.js LTS Version 6 (Boron).
-1. It then clones the Pac-Man game into the configured application directory.
-1. Exposes port 8080 for the web server.
-1. Starts the Node.js application using `npm start`.
+kubectl get statefulset
+kubectl get pvc
+Pac-Man Application
 
-To build the image run:
+Pac-Man is deployed using a Kubernetes Deployment.
 
-```
-cd docker
-docker build -t <registry>/<user>/pacman-nodejs-app .
-```
+kubectl get deployment
+kubectl get pods
+Load Balancer
 
-You can test the image by running:
+The application is exposed using a Kubernetes Service of type LoadBalancer.
 
-```
-docker run -p 8000:8080 <registry>/<user>/pacman-nodejs-app
-```
+kubectl get svc
+CI/CD
 
-And going to `http://localhost:8000/` to see if you get the Pac-Man game.
+GitHub Actions workflow:
 
-Once you're satisfied you can push the image to the container registry.
+.github/workflows/deploy.yml
 
-```
-docker push <registry>/<user>/pacman-nodejs-app
-```
+The workflow performs:
 
-### Building using an s2i image
+Checkout repository
+Configure AWS credentials
+Login to Amazon ECR
+Build Docker image
+Push Docker image to ECR
+Update kubeconfig
+Restart Kubernetes deployment
+Application URL
+http://<AWS_NLB_DNS_NAME>
+Screenshots
 
-```
-s2i build . centos/nodejs-6-centos7 pacman
-```
+Screenshots are stored in the screenshots/ folder.
