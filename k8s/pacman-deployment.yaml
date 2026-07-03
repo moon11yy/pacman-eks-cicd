@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pacman
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pacman
+  template:
+    metadata:
+      labels:
+        app: pacman
+    spec:
+      nodeSelector:
+        karpenter.sh/nodepool: general-purpose
+      containers:
+        - name: pacman
+          image: 233231934984.dkr.ecr.eu-central-1.amazonaws.com/pacman:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: MONGO_SERVICE_HOST
+              value: "mongo"
+            - name: MONGO_DATABASE
+              value: "pacman"
+            - name: MY_MONGO_PORT
+              value: "27017"
+            - name: MONGO_USE_SSL
+              value: "false"
+            - name: MONGO_VALIDATE_SSL
+              value: "false"
