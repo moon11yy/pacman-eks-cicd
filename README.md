@@ -1,97 +1,133 @@
-# Pac-Man EKS CI/CD Project
+# 🚀 Pac-Man on Amazon EKS with CI/CD
 
-## Overview
+Deploying a Pac-Man application to Amazon EKS using Kubernetes, Docker, Amazon ECR, Amazon EBS and GitHub Actions.
 
-This project deploys a Pac-Man Node.js application on Amazon EKS using Kubernetes, MongoDB, Amazon ECR, EBS Persistent Volumes, Network Load Balancer, and GitHub Actions CI/CD.
+---
 
-## Architecture
+## 📖 Project Overview
 
-- Pac-Man application runs as a Kubernetes Deployment.
-- MongoDB runs as a Kubernetes StatefulSet.
-- MongoDB data is stored on an Amazon EBS Persistent Volume.
-- The application is exposed using an AWS Network Load Balancer.
-- Docker images are stored in Amazon ECR.
-- GitHub Actions automatically builds, pushes, and deploys the application to EKS.
+This project demonstrates a complete cloud-native deployment pipeline.
 
-## Technologies
+The application is containerized with Docker, stored in Amazon ECR, deployed to Amazon EKS, exposed through an AWS Network Load Balancer, and automatically updated using GitHub Actions.
 
-- AWS EKS
-- EKS Auto Mode
+---
+
+## 🏗️ Architecture
+
+```
+Developer
+    │
+ git push
+    ▼
+GitHub Repository
+    ▼
+GitHub Actions
+    ├────────► Amazon ECR
+    │
+    └────────► Amazon EKS
+                     │
+          ┌──────────┴──────────┐
+          │                     │
+     Pac-Man Deployment   MongoDB StatefulSet
+          │                     │
+      Pac-Man Pod              PVC
+          │                     │
+       Service             Amazon EBS
+          │
+AWS Network Load Balancer
+          │
+       Browser
+```
+
+Architecture diagram:
+
+```
+diagrams/architecture.png
+```
+
+---
+
+## ☁️ Technologies
+
+- Amazon EKS
+- Amazon ECR
+- Amazon EBS
+- AWS Network Load Balancer
 - Docker
 - Kubernetes
 - MongoDB
-- Amazon ECR
-- Amazon EBS
-- Network Load Balancer
 - GitHub Actions
 - eksctl
 - kubectl
 
-## Project Structure
+---
 
-```text
+## 📁 Project Structure
+
+```
 .
-├── Dockerfile
-├── infra/
-│   └── cluster.yaml
-├── k8s/
-│   ├── storageclass.yaml
-│   ├── mongo-service.yaml
-│   ├── mongo-statefulset.yaml
-│   ├── pacman-deployment.yaml
-│   └── pacman-service.yaml
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml
-├── screenshots/
-└── README.md
-Deployment Flow
-Developer pushes code to GitHub
-        ↓
-GitHub Actions starts
-        ↓
-Docker image is built
-        ↓
-Image is pushed to Amazon ECR
-        ↓
-GitHub Actions updates EKS deployment
-        ↓
-Pac-Man runs on EKS
-Kubernetes Resources
-MongoDB
+├── diagrams/
+├── infra/
+├── k8s/
+├── Dockerfile
+├── README.md
+└── ...
+```
 
-MongoDB is deployed using a StatefulSet with a Persistent Volume Claim.
+---
 
-kubectl get statefulset
-kubectl get pvc
-Pac-Man Application
+## ⚙️ Kubernetes Resources
 
-Pac-Man is deployed using a Kubernetes Deployment.
+| Resource | Purpose |
+|----------|---------|
+| Deployment | Pac-Man application |
+| StatefulSet | MongoDB |
+| PVC | Persistent storage |
+| Service | Internal networking |
+| LoadBalancer | Public access |
 
-kubectl get deployment
-kubectl get pods
-Load Balancer
+---
 
-The application is exposed using a Kubernetes Service of type LoadBalancer.
+## 🚀 CI/CD Pipeline
 
-kubectl get svc
-CI/CD
+Every push to the repository automatically:
 
-GitHub Actions workflow:
+- Builds Docker image
+- Pushes image to Amazon ECR
+- Connects to Amazon EKS
+- Restarts the deployment
 
-.github/workflows/deploy.yml
+---
 
-The workflow performs:
+## 🌍 Application
 
-Checkout repository
-Configure AWS credentials
-Login to Amazon ECR
-Build Docker image
-Push Docker image to ECR
-Update kubeconfig
-Restart Kubernetes deployment
-Application URL
-http://<AWS_NLB_DNS_NAME>
-Screenshots
+The application is exposed through an AWS Network Load Balancer.
 
-Screenshots are stored in the screenshots/ folder.
+```
+Browser
+        │
+        ▼
+AWS NLB
+        ▼
+Pac-Man Service
+        ▼
+Pac-Man Pod
+```
+
+---
+
+## 📸 Screenshots
+
+Screenshots can be found in:
+
+```
+screenshots/
+```
+
+---
+
+## 👨‍💻 Author
+
+Nikita Stasevich
